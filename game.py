@@ -20,6 +20,7 @@ class Game:
         self.surface = surface
         self.background = Background()
         self.score_saved = False
+        self.player_name = ""
 
         # Load camera
         self.cap = cv2.VideoCapture(1)
@@ -102,22 +103,19 @@ class Game:
         )
 
     def update_scores(self, score, file_path="scores.json"):
-        # Load existing scores
         try:
             with open(file_path, "r") as file:
                 scores = json.load(file)
         except FileNotFoundError:
-            # If the file doesn't exist, start with an empty list
             scores = []
 
-        # Add the new score with the current timestamp
         new_score = {
+            "player": self.player_name if self.player_name else "Anonymous",
             "score": score,
             "played_at": str(datetime.now()),
         }
         scores.append(new_score)
 
-        # Save the updated scores back to the file
         with open(file_path, "w") as file:
             json.dump(scores, file, indent=4)
 

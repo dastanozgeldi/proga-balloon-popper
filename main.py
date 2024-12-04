@@ -28,7 +28,7 @@ state = "menu"
 
 
 game = Game(SCREEN)
-menu = Menu(SCREEN)
+menu = Menu(SCREEN, game)
 
 
 def user_events():
