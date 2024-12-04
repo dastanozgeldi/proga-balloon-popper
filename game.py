@@ -1,5 +1,7 @@
+import json
 import random
 import time
+from datetime import datetime
 
 import cv2
 import pygame
@@ -17,6 +19,7 @@ class Game:
     def __init__(self, surface):
         self.surface = surface
         self.background = Background()
+        self.score_saved = False
 
         # Load camera
         self.cap = cv2.VideoCapture(1)
@@ -98,6 +101,26 @@ class Game:
             round(GAME_DURATION - (time.time() - self.game_start_time), 1), 0
         )
 
+    def update_scores(self, score, file_path="scores.json"):
+        # Load existing scores
+        try:
+            with open(file_path, "r") as file:
+                scores = json.load(file)
+        except FileNotFoundError:
+            # If the file doesn't exist, start with an empty list
+            scores = []
+
+        # Add the new score with the current timestamp
+        new_score = {
+            "score": score,
+            "played_at": str(datetime.now()),
+        }
+        scores.append(new_score)
+
+        # Save the updated scores back to the file
+        with open(file_path, "w") as file:
+            json.dump(scores, file, indent=4)
+
     def update(self):
 
         self.load_camera()
@@ -121,6 +144,10 @@ class Game:
                 insect.move()
 
         else:  # when the game is over
+            if not self.score_saved:
+                self.update_scores(self.score)
+                self.score_saved = True
+
             if ui.button(
                 self.surface, 540, "Continue", click_sound=self.sounds["slap"]
             ):
