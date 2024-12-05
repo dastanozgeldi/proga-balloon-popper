@@ -27,8 +27,9 @@ pygame.mixer.music.play(-1)
 state = "menu"
 
 
-game = Game(SCREEN)
+game = Game(SCREEN, None)
 menu = Menu(SCREEN, game)
+game.menu = menu
 
 
 def user_events():
@@ -41,6 +42,9 @@ def user_events():
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
+
+        if state == "menu":
+            menu.handle_event(event)
 
 
 def update():

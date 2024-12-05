@@ -16,8 +16,9 @@ from settings import *
 
 
 class Game:
-    def __init__(self, surface):
+    def __init__(self, surface, menu):
         self.surface = surface
+        self.menu = menu
         self.background = Background()
         self.score_saved = False
         self.player_name = ""
@@ -149,6 +150,7 @@ class Game:
             if ui.button(
                 self.surface, 540, "Continue", click_sound=self.sounds["slap"]
             ):
+                self.menu.reset_input()
                 return "menu"
 
         # cv2.imshow("Frame", self.frame)
