@@ -1,8 +1,8 @@
 import json
 import random
 import time
-from datetime import datetime
 
+import requests
 import cv2
 import pygame
 
@@ -111,17 +111,28 @@ class Game:
             scores = []
 
         new_score = {
-            "player": self.player_name if self.player_name else "Anonymous",
+            "player_name": self.player_name if self.player_name else "Anonymous",
             "score": score,
-            "played_at": str(datetime.now()),
         }
         scores.append(new_score)
 
         with open(file_path, "w") as file:
             json.dump(scores, file, indent=4)
 
-    def update(self):
+        try:
+            response = requests.post(
+                "https://ozgeldi.tech/api/isjo",
+                json=new_score,
+                headers={"Content-Type": "application/json"},
+                timeout=5,
+            )
+            response.raise_for_status()
 
+            print("Sent to API successfully")
+        except Exception as e:
+            print(f"Failed to send score to API: {e}")
+
+    def update(self):
         self.load_camera()
         self.set_hand_position()
         self.game_time_update()
@@ -133,7 +144,7 @@ class Game:
             (x, y) = self.hand_tracking.get_hand_center()
             self.hand.rect.center = (x, y)
             self.hand.left_click = self.hand_tracking.hand_closed
-            print("Hand closed", self.hand.left_click)
+            # print("Hand closed", self.hand.left_click)
             if self.hand.left_click:
                 self.hand.image = self.hand.image_smaller.copy()
             else:
