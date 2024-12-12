@@ -164,5 +164,5 @@ class Game:
                 self.menu.reset_input()
                 return "menu"
 
-        cv2.imshow("Frame", self.frame)
+        # cv2.imshow("Frame", self.frame)
         cv2.waitKey(1)
