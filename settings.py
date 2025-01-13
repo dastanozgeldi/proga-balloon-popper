@@ -9,7 +9,7 @@ FPS = 90
 DRAW_FPS = True
 
 # sizes
-BUTTONS_SIZES = (240, 90)
+BUTTONS_SIZES = (600, 60)
 HAND_SIZE = 200
 HAND_HITBOX_SIZE = (60, 80)
 BALLOONS_SIZES = (53, 100)
@@ -34,9 +34,9 @@ BEE_PENALITY = 1  # will remove X of the score of the player (if he kills a bee)
 
 # colors
 COLORS = {
-    "title": (38, 61, 39),
-    "score": (38, 61, 39),
-    "timer": (38, 61, 39),
+    "title": (38, 61, 93),
+    "score": (38, 61, 93),
+    "timer": (38, 61, 93),
     "buttons": {
         "default": (56, 67, 209),
         "second": (87, 99, 255),

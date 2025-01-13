@@ -1,4 +1,5 @@
 import sys
+import time
 
 import pygame
 
@@ -14,8 +15,9 @@ class Menu:
         self.background = Background()
         self.click_sound = pygame.mixer.Sound(f"assets/sounds/slap.wav")
         self.reset_input()
-        self.input_rect = pygame.Rect(SCREEN_WIDTH//2 - 100, 250, 200, 40)
+        self.input_rect = pygame.Rect(SCREEN_WIDTH//2-300, 240, 600, 50)
         self.border_color = COLORS["buttons"]["default"]
+        self.show_credits = False
 
     def reset_input(self):
         self.player_name = ""
@@ -39,28 +41,58 @@ class Menu:
 
     def draw(self):
         self.background.draw(self.surface)
-        # draw title
-        ui.draw_text(self.surface, GAME_TITLE, (SCREEN_WIDTH//2, 120), COLORS["title"], font=FONTS["big"],
-                    shadow=True, shadow_color=(255,255,255), pos_mode="center")
         
-        # draw input field
-        pygame.draw.rect(self.surface, self.border_color, self.input_rect, 2)
-        pygame.draw.rect(self.surface, (255, 255, 255), self.input_rect.inflate(-2, -2))
-        text_surface = FONTS["small"].render(self.player_name, True, (0, 0, 0))
-        self.surface.blit(text_surface, (self.input_rect.x + 5, self.input_rect.y + 5))
-        
-        # draw input label
-        ui.draw_text(self.surface, "Enter your name:", (SCREEN_WIDTH//2, 220), 
-                    COLORS["title"], font=FONTS["small"], pos_mode="center")
+        if self.show_credits:
+            # Draw credits page
+            ui.draw_text(self.surface, "Credits", (SCREEN_WIDTH//2, 120), COLORS["title"], 
+                        font=FONTS["big"], shadow=True, shadow_color=(255,255,255), pos_mode="center")
+            ui.draw_text(self.surface, "Game made by: Dastan Ozgeldi", (SCREEN_WIDTH//2, 230), 
+                        COLORS["title"], font=FONTS["medium"], shadow=True, shadow_color=(255,255,255), pos_mode="center")
+            ui.draw_text(self.surface, "Game design: Alikhan Shikhiyev", (SCREEN_WIDTH//2, 300),
+                        COLORS['title'], font=FONTS['medium'], shadow=True, shadow_color=(255,255,255), pos_mode="center")
+        else:
+            # Draw main menu
+            ui.draw_text(self.surface, GAME_TITLE, (SCREEN_WIDTH//2, 120), COLORS["title"], 
+                        font=FONTS["big"], shadow=True, shadow_color=(255,255,255), pos_mode="center")
+            
+            # Draw improved input field
+            pygame.draw.rect(self.surface, self.border_color, self.input_rect, 3, border_radius=10)
+            pygame.draw.rect(self.surface, (255, 255, 255), self.input_rect.inflate(-3, -3), border_radius=10)
+            
+            # Draw text with cursor
+            text_surface = FONTS["small"].render(self.player_name, True, (0, 0, 0))
+            text_rect = text_surface.get_rect(center=self.input_rect.center)
+            self.surface.blit(text_surface, text_rect)
+            
+            # Add blinking cursor if input is active
+            if self.input_active and time.time() % 1 > 0.5:  # Blink every 0.5 seconds
+                cursor_x = text_rect.right + 2
+                if not self.player_name:  # Center cursor if no text
+                    cursor_x = self.input_rect.centerx
+                pygame.draw.line(self.surface, (0, 0, 0),
+                               (cursor_x, self.input_rect.centery - 10),
+                               (cursor_x, self.input_rect.centery + 10), 2)
+            
+            # Draw input label
+            ui.draw_text(self.surface, "Enter your name:", (SCREEN_WIDTH//2, 220), 
+                        COLORS["title"], font=FONTS["small"], pos_mode="center")
 
     def update(self):
         self.border_color = COLORS["buttons"]["second"] if self.input_active else COLORS["buttons"]["default"]
         self.draw()
 
-        if ui.button(self.surface, 320, "START", click_sound=self.click_sound):
-            self.game.player_name = self.player_name
-            return "game"
+        if self.show_credits:
+            if ui.button(self.surface, 540, "Back", click_sound=self.click_sound):
+                self.show_credits = False
+                return "menu"
+        else:
+            if ui.button(self.surface, 320, "Start", click_sound=self.click_sound):
+                self.game.player_name = self.player_name
+                return "game"
 
-        if ui.button(self.surface, 320+BUTTONS_SIZES[1]*1.5, "Quit", click_sound=self.click_sound):
-            pygame.quit()
-            sys.exit()
+            if ui.button(self.surface, 320+BUTTONS_SIZES[1]*1.25, "Credits", click_sound=self.click_sound):
+                self.show_credits = True
+
+            if ui.button(self.surface, 320+BUTTONS_SIZES[1]*2.5, "Quit", click_sound=self.click_sound):
+                pygame.quit()
+                sys.exit()

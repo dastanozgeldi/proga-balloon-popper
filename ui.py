@@ -34,7 +34,7 @@ def button(surface, pos_y, text=None, click_sound=None):
     pygame.draw.rect(surface, color, rect) # draw the rectangle
     # draw the text
     if text is not None:
-        draw_text(surface, text, rect.center, COLORS["buttons"]["text"], pos_mode="center",
+        draw_text(surface, text, rect.center, COLORS["buttons"]["text"], font=FONTS['small'], pos_mode="center",
                     shadow=True, shadow_color=COLORS["buttons"]["shadow"])
 
     if on_button and pygame.mouse.get_pressed()[0]: # if the user press on the button

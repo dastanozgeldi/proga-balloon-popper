@@ -24,7 +24,7 @@ class Game:
         self.player_name = ""
 
         # Load camera
-        self.cap = cv2.VideoCapture(1)
+        self.cap = cv2.VideoCapture(0)
 
         self.sounds = {}
         self.sounds["slap"] = pygame.mixer.Sound(f"assets/sounds/slap.wav")
@@ -164,5 +164,5 @@ class Game:
                 self.menu.reset_input()
                 return "menu"
 
-        # cv2.imshow("Frame", self.frame)
+        cv2.imshow("Frame", self.frame)
         cv2.waitKey(1)
