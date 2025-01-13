@@ -46,10 +46,10 @@ class Menu:
             # Draw credits page
             ui.draw_text(self.surface, "Credits", (SCREEN_WIDTH//2, 120), COLORS["title"], 
                         font=FONTS["big"], shadow=True, shadow_color=(255,255,255), pos_mode="center")
-            ui.draw_text(self.surface, "Game made by: Dastan Ozgeldi", (SCREEN_WIDTH//2, 230), 
-                        COLORS["title"], font=FONTS["medium"], shadow=True, shadow_color=(255,255,255), pos_mode="center")
-            ui.draw_text(self.surface, "Game design: Alikhan Shikhiyev", (SCREEN_WIDTH//2, 300),
-                        COLORS['title'], font=FONTS['medium'], shadow=True, shadow_color=(255,255,255), pos_mode="center")
+            ui.draw_text(self.surface, "Game made by: Dastan Ozgeldi", (SCREEN_WIDTH//2, 200), 
+                        COLORS["title"], font=FONTS["small"], shadow=True, shadow_color=(255,255,255), pos_mode="center")
+            ui.draw_text(self.surface, "Game design: Alikhan Shikhiyev", (SCREEN_WIDTH//2, 235),
+                        COLORS['title'], font=FONTS['small'], shadow=True, shadow_color=(255,255,255), pos_mode="center")
         else:
             # Draw main menu
             ui.draw_text(self.surface, GAME_TITLE, (SCREEN_WIDTH//2, 120), COLORS["title"], 
@@ -58,7 +58,7 @@ class Menu:
             # Draw improved input field
             pygame.draw.rect(self.surface, self.border_color, self.input_rect, 3, border_radius=10)
             pygame.draw.rect(self.surface, (255, 255, 255), self.input_rect.inflate(-3, -3), border_radius=10)
-            
+
             # Draw text with cursor
             text_surface = FONTS["small"].render(self.player_name, True, (0, 0, 0))
             text_rect = text_surface.get_rect(center=self.input_rect.center)
@@ -82,7 +82,7 @@ class Menu:
         self.draw()
 
         if self.show_credits:
-            if ui.button(self.surface, 540, "Back", click_sound=self.click_sound):
+            if ui.button(self.surface, 500, "Back", click_sound=self.click_sound):
                 self.show_credits = False
                 return "menu"
         else:

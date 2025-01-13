@@ -11,12 +11,10 @@ class Hand:
         self.image_smaller = image.load("assets/hand.png", size=(HAND_SIZE - 50, HAND_SIZE - 50))
         self.rect = pygame.Rect(SCREEN_WIDTH//2, SCREEN_HEIGHT//2, HAND_HITBOX_SIZE[0], HAND_HITBOX_SIZE[1])
         self.left_click = False
-        #self.hand_tracking = HandTracking()
 
 
     def follow_mouse(self): # change the hand pos center at the mouse pos
         self.rect.center = pygame.mouse.get_pos()
-        #self.hand_tracking.display_hand()
 
     def follow_mediapipe_hand(self, x, y):
         self.rect.center = (x, y)
