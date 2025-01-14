@@ -17,14 +17,17 @@ from settings import *
 
 class Game:
     def __init__(self, surface, menu):
+        self.window_size = pygame.display.get_window_size()
         self.surface = surface
         self.menu = menu
-        self.background = Background()
+        self.background = Background(self.window_size)
         self.score_saved = False
         self.player_name = ""
 
         # Load camera
         self.cap = cv2.VideoCapture(1)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 200)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 200)
 
         self.sounds = {}
         self.sounds["slap"] = pygame.mixer.Sound(f"assets/sounds/slap.wav")
@@ -33,8 +36,8 @@ class Game:
         self.sounds["screaming"].set_volume(SOUNDS_VOLUME)
 
     def reset(self):  # reset all the needed variables
-        self.hand_tracking = HandTracking()
-        self.hand = Hand()
+        self.hand_tracking = HandTracking(self.window_size)
+        self.hand = Hand(self.window_size)
         self.insects = []
         self.insects_spawn_timer = 0
         self.score = 0
@@ -50,16 +53,17 @@ class Game:
                 (GAME_DURATION - self.time_left) / GAME_DURATION * 100 / 2
             )  # increase from 0 to 50 during all  the game (linear)
             if random.randint(0, 100) < nb:
-                self.insects.append(Bee())
+                self.insects.append(Bee(self.window_size))
             else:
-                self.insects.append(Balloon())
+                self.insects.append(Balloon(self.window_size))
 
             # spawn a other balloon after the half of the game
             if self.time_left < GAME_DURATION / 2:
-                self.insects.append(Balloon())
+                self.insects.append(Balloon(self.window_size))
 
     def load_camera(self):
-        _, self.frame = self.cap.read()
+        _, frame = self.cap.read()
+        self.frame = cv2.resize(frame, (200, 113))
 
     def set_hand_position(self):
         self.frame = self.hand_tracking.scan_hands(self.frame)
@@ -91,12 +95,21 @@ class Game:
         ui.draw_text(
             self.surface,
             f"Time left : {self.time_left}",
-            (SCREEN_WIDTH // 2, 5),
+            (self.window_size[0] - 400, 5),
             timer_text_color,
             font=FONTS["medium"],
             shadow=True,
             shadow_color=(255, 255, 255),
         )
+
+        # Convert camera frame to Pygame surface and draw it
+        if hasattr(self, 'frame'):
+            # Convert BGR to RGB
+            frame_rgb = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
+            # Create Pygame surface from camera frame
+            frame_surface = pygame.surfarray.make_surface(frame_rgb.swapaxes(0,1))
+            # Position in top right corner with 10px padding
+            self.surface.blit(frame_surface, (self.window_size[0], 0))
 
     def game_time_update(self):
         self.time_left = max(
@@ -159,10 +172,8 @@ class Game:
                 self.score_saved = True
 
             if ui.button(
-                self.surface, 540, "Continue", click_sound=self.sounds["slap"]
+                self.surface, self.window_size[1] - 100, "Continue", click_sound=self.sounds["slap"],
+                pos_x=self.window_size[0]
             ):
                 self.menu.reset_input()
                 return "menu"
-
-        cv2.imshow("Frame", self.frame)
-        cv2.waitKey(1)

@@ -8,7 +8,8 @@ from settings import *
 
 
 class Bee(Balloon):
-    def __init__(self):
+    def __init__(self, window_size):
+        self.window_size = window_size
         # size
         random_size_value = random.uniform(BEE_SIZE_RANDOMIZE[0], BEE_SIZE_RANDOMIZE[1])
         size = (

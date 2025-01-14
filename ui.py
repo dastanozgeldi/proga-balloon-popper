@@ -21,7 +21,7 @@ def draw_text(surface, text, pos, color, font=FONTS["medium"], pos_mode="top_lef
 
 
 def button(surface, pos_y, text=None, click_sound=None, pos_x=None):
-    rect = pygame.Rect((pos_x if pos_x else SCREEN_WIDTH//2 - BUTTONS_SIZES[0]//2, pos_y), BUTTONS_SIZES)
+    rect = pygame.Rect(((pos_x if pos_x else SCREEN_WIDTH)//2 - BUTTONS_SIZES[0]//2, pos_y), BUTTONS_SIZES)
 
     on_button = False
     if rect.collidepoint(pygame.mouse.get_pos()):

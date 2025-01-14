@@ -9,7 +9,8 @@ mp_hands = mp.solutions.hands
 
 
 class HandTracking:
-    def __init__(self):
+    def __init__(self, window_size):
+        self.window_size = window_size
         self.hand_tracking = mp_hands.Hands(
             min_detection_confidence=0.5, min_tracking_confidence=0.5
         )
@@ -39,8 +40,8 @@ class HandTracking:
             for hand_landmarks in self.results.multi_hand_landmarks:
                 x, y = hand_landmarks.landmark[9].x, hand_landmarks.landmark[9].y
 
-                self.hand_x = int(x * SCREEN_WIDTH)
-                self.hand_y = int(y * SCREEN_HEIGHT)
+                self.hand_x = int(x * self.window_size[0])
+                self.hand_y = int(y * self.window_size[1])
 
                 x1, y1 = hand_landmarks.landmark[12].x, hand_landmarks.landmark[12].y
 

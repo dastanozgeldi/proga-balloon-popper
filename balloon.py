@@ -8,7 +8,8 @@ from settings import *
 
 
 class Balloon:
-    def __init__(self):
+    def __init__(self, window_size):
+        self.window_size = window_size
         # size
         random_size_value = random.uniform(
             BALLOON_SIZE_RANDOMIZE[0], BALLOON_SIZE_RANDOMIZE[1]
@@ -39,22 +40,22 @@ class Balloon:
         vel = random.uniform(BALLOONS_MOVE_SPEED["min"], BALLOONS_MOVE_SPEED["max"])
         moving_direction = random.choice(("left", "right", "up", "down"))
         if moving_direction == "right":
-            start_pos = (-size[0], random.randint(size[1], SCREEN_HEIGHT - size[1]))
+            start_pos = (-size[0], random.randint(size[1], self.window_size[1] - size[1]))
             self.vel = [vel, 0]
         if moving_direction == "left":
             start_pos = (
-                SCREEN_WIDTH + size[0],
-                random.randint(size[1], SCREEN_HEIGHT - size[1]),
+                self.window_size[0] + size[0],
+                random.randint(size[1], self.window_size[1] - size[1]),
             )
             self.vel = [-vel, 0]
         if moving_direction == "up":
             start_pos = (
-                random.randint(size[0], SCREEN_WIDTH - size[0]),
-                SCREEN_HEIGHT + size[1],
+                random.randint(size[0], self.window_size[0] - size[0]),
+                self.window_size[1] + size[1],
             )
             self.vel = [0, -vel]
         if moving_direction == "down":
-            start_pos = (random.randint(size[0], SCREEN_WIDTH - size[0]), -size[1])
+            start_pos = (random.randint(size[0], self.window_size[0] - size[0]), -size[1])
             self.vel = [0, vel]
         return moving_direction, start_pos
 

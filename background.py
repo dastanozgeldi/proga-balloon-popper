@@ -3,10 +3,11 @@ from settings import *
 
 
 class Background:
-    def __init__(self):
+    def __init__(self, window_size):
+        self.w, self.h = window_size
         self.image = image.load(
             "assets/background.jpg",
-            size=(SCREEN_WIDTH, SCREEN_HEIGHT),
+            size=(self.w, self.h),
             convert="default",
         )
 
@@ -14,6 +15,6 @@ class Background:
         image.draw(
             surface,
             self.image,
-            (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2),
+            (self.w // 2, self.h // 2),
             pos_mode="center",
         )

@@ -5,11 +5,12 @@ from settings import *
 
 
 class Hand:
-    def __init__(self):
+    def __init__(self, window_size):
+        self.window_size = window_size
         self.orig_image = image.load("assets/hand.png", size=(HAND_SIZE, HAND_SIZE))
         self.image = self.orig_image.copy()
         self.image_smaller = image.load("assets/hand.png", size=(HAND_SIZE - 50, HAND_SIZE - 50))
-        self.rect = pygame.Rect(SCREEN_WIDTH//2, SCREEN_HEIGHT//2, HAND_HITBOX_SIZE[0], HAND_HITBOX_SIZE[1])
+        self.rect = pygame.Rect(self.window_size[0]//2, self.window_size[1]//2, HAND_HITBOX_SIZE[0], HAND_HITBOX_SIZE[1])
         self.left_click = False
 
 
