@@ -20,8 +20,8 @@ def draw_text(surface, text, pos, color, font=FONTS["medium"], pos_mode="top_lef
 
 
 
-def button(surface, pos_y, text=None, click_sound=None):
-    rect = pygame.Rect((SCREEN_WIDTH//2 - BUTTONS_SIZES[0]//2, pos_y), BUTTONS_SIZES)
+def button(surface, pos_y, text=None, click_sound=None, pos_x=None):
+    rect = pygame.Rect((pos_x if pos_x else SCREEN_WIDTH//2 - BUTTONS_SIZES[0]//2, pos_y), BUTTONS_SIZES)
 
     on_button = False
     if rect.collidepoint(pygame.mouse.get_pos()):
@@ -40,4 +40,24 @@ def button(surface, pos_y, text=None, click_sound=None):
     if on_button and pygame.mouse.get_pressed()[0]: # if the user press on the button
         if click_sound is not None: # play the sound if needed
             click_sound.play()
+        return True
+    
+
+arrow_left = pygame.image.load('assets/arrow-left.png')
+
+
+def back_button(surface, pos_x, pos_y):
+    rect = pygame.Rect((pos_x, pos_y), (50, 50))
+
+    on_button = False
+    if rect.collidepoint(pygame.mouse.get_pos()):
+        color = COLORS["buttons"]["second"]
+        on_button = True
+    else:
+        color = COLORS["buttons"]["default"]
+    
+    pygame.draw.circle(surface, color, (rect.centerx, rect.centery), 25)
+    surface.blit(arrow_left, rect.topleft)
+
+    if on_button and pygame.mouse.get_pressed()[0]:
         return True
