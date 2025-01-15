@@ -1,4 +1,3 @@
-import json
 import random
 import time
 
@@ -78,8 +77,8 @@ class Game:
             frame_rgb = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
             # Create Pygame surface from camera frame
             frame_surface = pygame.surfarray.make_surface(frame_rgb.swapaxes(0, 1))
-            # Position in top right corner with 10px padding
-            self.surface.blit(frame_surface, (SCREEN_WIDTH - 176 - 10, 10))
+            # Position in top right corner with 20px padding
+            self.surface.blit(frame_surface, (self.window_size[0] - 300, 0))
 
         # draw the insects
         for insect in self.insects:

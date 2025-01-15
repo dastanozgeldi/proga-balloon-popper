@@ -24,7 +24,7 @@ class HandTracking:
 
     def scan_hands(self, image):
         # Reduce image resolution for processing
-        image = cv2.resize(image, (160, 90))  # Lower resolution for processing
+        image = cv2.resize(image, (300, 169))  # Lower resolution for processing
 
         image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
         image.flags.writeable = False
