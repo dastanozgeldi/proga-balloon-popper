@@ -113,21 +113,11 @@ class Game:
             round(GAME_DURATION - (time.time() - self.game_start_time), 1), 0
         )
 
-    def update_scores(self, score, file_path="scores.json"):
-        try:
-            with open(file_path, "r") as file:
-                scores = json.load(file)
-        except FileNotFoundError:
-            scores = []
-
+    def update_scores(self, score):
         new_score = {
             "player_name": self.player_name if self.player_name else "Anonymous",
             "score": score,
         }
-        scores.append(new_score)
-
-        with open(file_path, "w") as file:
-            json.dump(scores, file, indent=4)
 
         try:
             response = requests.post(
