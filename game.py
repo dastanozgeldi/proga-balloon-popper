@@ -92,7 +92,6 @@ class Game:
             f"Score : {self.score}",
             (5, 5),
             COLORS["score"],
-            font=FONTS["medium"],
             shadow=True,
             shadow_color=(255, 255, 255),
         )
@@ -105,7 +104,6 @@ class Game:
             f"Time left : {self.time_left}",
             (SCREEN_WIDTH // 2, 5),
             timer_text_color,
-            font=FONTS["medium"],
             shadow=True,
             shadow_color=(255, 255, 255),
         )

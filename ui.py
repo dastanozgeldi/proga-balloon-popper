@@ -84,3 +84,31 @@ def back_button(surface, pos_x, pos_y):
 
     if on_button and pygame.mouse.get_pressed()[0]:
         return True
+
+
+def draw_title_text(surface, text: str, *, x: int, y: int = None):
+    return draw_text(
+        surface,
+        text,
+        (x, y if y else 120),
+        COLORS["title"],
+        font=FONTS["big"],
+        shadow=True,
+        shadow_color=(255, 255, 255),
+        pos_mode="center",
+    )
+
+
+def draw_small_texts(surface, texts: list[str], *, x: int, starting_y: int = None):
+    y = starting_y if starting_y else 200
+    for index, text in enumerate(texts):
+        draw_text(
+            surface,
+            text,
+            (x, y + index * 35),
+            COLORS["title"],
+            font=FONTS["small"],
+            shadow=True,
+            shadow_color=(255, 255, 255),
+            pos_mode="center",
+        )

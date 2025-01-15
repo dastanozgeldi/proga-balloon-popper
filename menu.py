@@ -2,6 +2,7 @@ import sys
 import time
 
 import pygame
+import requests
 
 import ui
 from background import Background
@@ -19,6 +20,8 @@ class Menu:
         self.input_rect = pygame.Rect(self.window_width // 2 - 300, 240, 600, 50)
         self.border_color = COLORS["buttons"]["default"]
         self.show_leaderboard = False
+        self.leaderboard_fetched = False
+        self.leaderboard_data = []
         self.show_credits = False
 
     def reset_input(self):
@@ -45,69 +48,35 @@ class Menu:
         self.background.draw(self.surface)
 
         if self.show_leaderboard:
-            ui.draw_text(
-                self.surface,
-                "Leaderboard",
-                (self.window_width // 2, 120),
-                COLORS["title"],
-                font=FONTS["big"],
-                shadow=True,
-                shadow_color=(255, 255, 255),
-                pos_mode="center",
-            )
-            ui.draw_text(
-                self.surface,
-                "1. work in progress",
-                (self.window_width // 2, 200),
-                COLORS["title"],
-                font=FONTS["small"],
-                shadow=True,
-                shadow_color=(255, 255, 255),
-                pos_mode="center",
+            if not self.leaderboard_fetched:
+                response = requests.get("https://ozgeldi.tech/api/isjo")
+                raw = response.json()
+                self.leaderboard_fetched = True
+                self.leaderboard_data = [
+                    f"{index + 1}. {item['player_name']}: {item['score']}"
+                    for index, item in enumerate(raw["data"])
+                ]
+            ui.draw_title_text(self.surface, "Leaderboard", x=self.window_width // 2)
+            ui.draw_small_texts(
+                self.surface, self.leaderboard_data, x=self.window_width // 2
             )
         elif self.show_credits:
-            # Draw credits page
-            ui.draw_text(
+            ui.draw_title_text(self.surface, "Credits", x=self.window_width // 2)
+            ui.draw_small_texts(
                 self.surface,
-                "Credits",
-                (self.window_width // 2, 120),
-                COLORS["title"],
-                font=FONTS["big"],
-                shadow=True,
-                shadow_color=(255, 255, 255),
-                pos_mode="center",
-            )
-            ui.draw_text(
-                self.surface,
-                "Game made by: Dastan Ozgeldi",
-                (self.window_width // 2, 200),
-                COLORS["title"],
-                font=FONTS["small"],
-                shadow=True,
-                shadow_color=(255, 255, 255),
-                pos_mode="center",
-            )
-            ui.draw_text(
-                self.surface,
-                "Game design: Alikhan Shikhiyev",
-                (self.window_width // 2, 235),
-                COLORS["title"],
-                font=FONTS["small"],
-                shadow=True,
-                shadow_color=(255, 255, 255),
-                pos_mode="center",
+                [
+                    "Dastan Ozgeldi",
+                    "Alikhan Shikhiyev",
+                    "Aizhan Abisheva",
+                ],
+                x=self.window_width // 2,
             )
         else:
             # Draw main menu
-            ui.draw_text(
+            ui.draw_title_text(
                 self.surface,
                 GAME_TITLE,
-                (self.window_width // 2, 120),
-                COLORS["title"],
-                font=FONTS["big"],
-                shadow=True,
-                shadow_color=(255, 255, 255),
-                pos_mode="center",
+                x=self.window_width // 2,
             )
 
             # Draw improved input field

@@ -5,7 +5,7 @@ GAME_TITLE = WINDOW_NAME
 
 SCREEN_WIDTH, SCREEN_HEIGHT = 1200, 700
 
-FPS = 60
+FPS = 30
 DRAW_FPS = True
 
 # sizes
@@ -54,4 +54,4 @@ pygame.font.init()
 FONTS = {}
 FONTS["small"] = pygame.font.Font(None, 40)
 FONTS["medium"] = pygame.font.Font(None, 72)
-FONTS["big"] = pygame.font.Font(None, 120)
+FONTS["big"] = pygame.font.Font(None, 96)

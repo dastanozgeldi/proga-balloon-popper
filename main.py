@@ -62,13 +62,13 @@ def update():
 while True:
     user_events()
     update()
-    
+
     # Clear previous FPS display by drawing background at that spot
     if DRAW_FPS:
         fps_label = fps_font.render(
             f"FPS: {int(main_clock.get_fps())}", 1, (255, 200, 20)
         )
         SCREEN.blit(fps_label, (5, 70))
-    
+
     # Update the display after drawing everything
     pygame.display.flip()
