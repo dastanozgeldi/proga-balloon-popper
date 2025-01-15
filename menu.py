@@ -16,11 +16,10 @@ class Menu:
         self.background = Background((self.window_width, self.window_height))
         self.click_sound = pygame.mixer.Sound(f"assets/sounds/slap.wav")
         self.reset_input()
-        self.input_rect = pygame.Rect(self.window_width//2-300, 240, 600, 50)
+        self.input_rect = pygame.Rect(self.window_width // 2 - 300, 240, 600, 50)
         self.border_color = COLORS["buttons"]["default"]
         self.show_leaderboard = False
         self.show_credits = False
-
 
     def reset_input(self):
         self.player_name = ""
@@ -32,7 +31,7 @@ class Menu:
                 self.input_active = True
             else:
                 self.input_active = False
-        
+
         if event.type == pygame.KEYDOWN and self.input_active:
             if event.key == pygame.K_RETURN:
                 self.input_active = False
@@ -44,49 +43,118 @@ class Menu:
 
     def draw(self):
         self.background.draw(self.surface)
-        
+
         if self.show_leaderboard:
-            ui.draw_text(self.surface, "Leaderboard", (self.window_width//2, 120), COLORS["title"], 
-                        font=FONTS["big"], shadow=True, shadow_color=(255,255,255), pos_mode="center")
-            ui.draw_text(self.surface, "1. work in progress", (self.window_width//2, 200), 
-                        COLORS["title"], font=FONTS["small"], shadow=True, shadow_color=(255,255,255), pos_mode="center")
+            ui.draw_text(
+                self.surface,
+                "Leaderboard",
+                (self.window_width // 2, 120),
+                COLORS["title"],
+                font=FONTS["big"],
+                shadow=True,
+                shadow_color=(255, 255, 255),
+                pos_mode="center",
+            )
+            ui.draw_text(
+                self.surface,
+                "1. work in progress",
+                (self.window_width // 2, 200),
+                COLORS["title"],
+                font=FONTS["small"],
+                shadow=True,
+                shadow_color=(255, 255, 255),
+                pos_mode="center",
+            )
         elif self.show_credits:
             # Draw credits page
-            ui.draw_text(self.surface, "Credits", (self.window_width//2, 120), COLORS["title"], 
-                        font=FONTS["big"], shadow=True, shadow_color=(255,255,255), pos_mode="center")
-            ui.draw_text(self.surface, "Game made by: Dastan Ozgeldi", (self.window_width//2, 200), 
-                        COLORS["title"], font=FONTS["small"], shadow=True, shadow_color=(255,255,255), pos_mode="center")
-            ui.draw_text(self.surface, "Game design: Alikhan Shikhiyev", (self.window_width//2, 235),
-                        COLORS['title'], font=FONTS['small'], shadow=True, shadow_color=(255,255,255), pos_mode="center")
+            ui.draw_text(
+                self.surface,
+                "Credits",
+                (self.window_width // 2, 120),
+                COLORS["title"],
+                font=FONTS["big"],
+                shadow=True,
+                shadow_color=(255, 255, 255),
+                pos_mode="center",
+            )
+            ui.draw_text(
+                self.surface,
+                "Game made by: Dastan Ozgeldi",
+                (self.window_width // 2, 200),
+                COLORS["title"],
+                font=FONTS["small"],
+                shadow=True,
+                shadow_color=(255, 255, 255),
+                pos_mode="center",
+            )
+            ui.draw_text(
+                self.surface,
+                "Game design: Alikhan Shikhiyev",
+                (self.window_width // 2, 235),
+                COLORS["title"],
+                font=FONTS["small"],
+                shadow=True,
+                shadow_color=(255, 255, 255),
+                pos_mode="center",
+            )
         else:
             # Draw main menu
-            ui.draw_text(self.surface, GAME_TITLE, (self.window_width//2, 120), COLORS["title"], 
-                        font=FONTS["big"], shadow=True, shadow_color=(255,255,255), pos_mode="center")
-            
+            ui.draw_text(
+                self.surface,
+                GAME_TITLE,
+                (self.window_width // 2, 120),
+                COLORS["title"],
+                font=FONTS["big"],
+                shadow=True,
+                shadow_color=(255, 255, 255),
+                pos_mode="center",
+            )
+
             # Draw improved input field
-            pygame.draw.rect(self.surface, self.border_color, self.input_rect, 3, border_radius=10)
-            pygame.draw.rect(self.surface, (255, 255, 255), self.input_rect.inflate(-3, -3), border_radius=10)
+            pygame.draw.rect(
+                self.surface, self.border_color, self.input_rect, 3, border_radius=10
+            )
+            pygame.draw.rect(
+                self.surface,
+                (255, 255, 255),
+                self.input_rect.inflate(-3, -3),
+                border_radius=10,
+            )
 
             # Draw text with cursor
             text_surface = FONTS["small"].render(self.player_name, True, (0, 0, 0))
             text_rect = text_surface.get_rect(center=self.input_rect.center)
             self.surface.blit(text_surface, text_rect)
-            
+
             # Add blinking cursor if input is active
             if self.input_active and time.time() % 1 > 0.5:  # Blink every 0.5 seconds
                 cursor_x = text_rect.right + 2
                 if not self.player_name:  # Center cursor if no text
                     cursor_x = self.input_rect.centerx
-                pygame.draw.line(self.surface, (0, 0, 0),
-                               (cursor_x, self.input_rect.centery - 10),
-                               (cursor_x, self.input_rect.centery + 10), 2)
-            
+                pygame.draw.line(
+                    self.surface,
+                    (0, 0, 0),
+                    (cursor_x, self.input_rect.centery - 10),
+                    (cursor_x, self.input_rect.centery + 10),
+                    2,
+                )
+
             # Draw input label
-            ui.draw_text(self.surface, "Enter your name:", (self.window_width//2, 220), 
-                        COLORS["title"], font=FONTS["small"], pos_mode="center")
+            ui.draw_text(
+                self.surface,
+                "Enter your name:",
+                (self.window_width // 2, 220),
+                COLORS["title"],
+                font=FONTS["small"],
+                pos_mode="center",
+            )
 
     def update(self):
-        self.border_color = COLORS["buttons"]["second"] if self.input_active else COLORS["buttons"]["default"]
+        self.border_color = (
+            COLORS["buttons"]["second"]
+            if self.input_active
+            else COLORS["buttons"]["default"]
+        )
         self.draw()
 
         if self.show_leaderboard:
@@ -98,16 +166,40 @@ class Menu:
                 self.show_credits = False
                 return "menu"
         else:
-            if ui.button(self.surface, 320, "Start", click_sound=self.click_sound, pos_x=self.window_width):
+            if ui.button(
+                self.surface,
+                320,
+                "Start",
+                click_sound=self.click_sound,
+                pos_x=self.window_width,
+            ):
                 self.game.player_name = self.player_name
                 return "game"
-            
-            if ui.button(self.surface, 320+BUTTONS_SIZES[1]*1.25, "Leaderboard", click_sound=self.click_sound, pos_x=self.window_width):
+
+            if ui.button(
+                self.surface,
+                320 + BUTTONS_SIZES[1] * 1.25,
+                "Leaderboard",
+                click_sound=self.click_sound,
+                pos_x=self.window_width,
+            ):
                 self.show_leaderboard = True
 
-            if ui.button(self.surface, 320+BUTTONS_SIZES[1]*2.5, "Credits", click_sound=self.click_sound, pos_x=self.window_width):
+            if ui.button(
+                self.surface,
+                320 + BUTTONS_SIZES[1] * 2.5,
+                "Credits",
+                click_sound=self.click_sound,
+                pos_x=self.window_width,
+            ):
                 self.show_credits = True
 
-            if ui.button(self.surface, 320+BUTTONS_SIZES[1]*3.75, "Quit", click_sound=self.click_sound, pos_x=self.window_width):
+            if ui.button(
+                self.surface,
+                320 + BUTTONS_SIZES[1] * 3.75,
+                "Quit",
+                click_sound=self.click_sound,
+                pos_x=self.window_width,
+            ):
                 pygame.quit()
                 sys.exit()

@@ -40,7 +40,10 @@ class Balloon:
         vel = random.uniform(BALLOONS_MOVE_SPEED["min"], BALLOONS_MOVE_SPEED["max"])
         moving_direction = random.choice(("left", "right", "up", "down"))
         if moving_direction == "right":
-            start_pos = (-size[0], random.randint(size[1], self.window_size[1] - size[1]))
+            start_pos = (
+                -size[0],
+                random.randint(size[1], self.window_size[1] - size[1]),
+            )
             self.vel = [vel, 0]
         if moving_direction == "left":
             start_pos = (
@@ -55,7 +58,10 @@ class Balloon:
             )
             self.vel = [0, -vel]
         if moving_direction == "down":
-            start_pos = (random.randint(size[0], self.window_size[0] - size[0]), -size[1])
+            start_pos = (
+                random.randint(size[0], self.window_size[0] - size[0]),
+                -size[1],
+            )
             self.vel = [0, vel]
         return moving_direction, start_pos
 

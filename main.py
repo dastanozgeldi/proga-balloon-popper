@@ -12,7 +12,7 @@ from settings import *
 os.environ["SDL_VIDEO_WINDOW_POS"] = "%d,%d" % (100, 32)
 pygame.init()
 pygame.display.set_caption(WINDOW_NAME)
-SCREEN = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
+SCREEN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 
 main_clock = pygame.time.Clock()
 
@@ -51,22 +51,24 @@ def update():
     global state
     if state == "menu":
         if menu.update() == "game":
-            game.reset()  # reset the game to start a new game
+            game.reset()
             state = "game"
     elif state == "game":
         if game.update() == "menu":
             state = "menu"
-    pygame.display.update()
     main_clock.tick(FPS)
 
 
 while True:
-    user_events()  # Buttons
-    update()  # Update
-
-    # FPS
+    user_events()
+    update()
+    
+    # Clear previous FPS display by drawing background at that spot
     if DRAW_FPS:
         fps_label = fps_font.render(
             f"FPS: {int(main_clock.get_fps())}", 1, (255, 200, 20)
         )
-        SCREEN.blit(fps_label, (5, 5))
+        SCREEN.blit(fps_label, (5, 70))
+    
+    # Update the display after drawing everything
+    pygame.display.flip()

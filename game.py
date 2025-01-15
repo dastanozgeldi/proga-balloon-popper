@@ -73,11 +73,11 @@ class Game:
         self.background.draw(self.surface)
 
         # Convert camera frame to Pygame surface and draw it
-        if hasattr(self, 'frame'):
+        if hasattr(self, "frame"):
             # Convert BGR to RGB
             frame_rgb = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
             # Create Pygame surface from camera frame
-            frame_surface = pygame.surfarray.make_surface(frame_rgb.swapaxes(0,1))
+            frame_surface = pygame.surfarray.make_surface(frame_rgb.swapaxes(0, 1))
             # Position in top right corner with 10px padding
             self.surface.blit(frame_surface, (SCREEN_WIDTH - 176 - 10, 10))
 
@@ -171,8 +171,11 @@ class Game:
                 self.score_saved = True
 
             if ui.button(
-                self.surface, self.window_size[1] - 100, "Continue", click_sound=self.sounds["slap"],
-                pos_x=self.window_size[0]
+                self.surface,
+                self.window_size[1] - 100,
+                "Continue",
+                click_sound=self.sounds["slap"],
+                pos_x=self.window_size[0],
             ):
                 self.menu.reset_input()
                 return "menu"
