@@ -27,10 +27,10 @@ DRAW_HITBOX = False  # will draw all the hitbox
 ANIMATION_SPEED = 0.08  # the frame of the insects will change every X sec
 
 # difficulty
-GAME_DURATION = 30  # the game will last X sec
+GAME_DURATION = 60  # the game will last X sec
 BALLOONS_SPAWN_TIME = 1
-BALLOONS_MOVE_SPEED = {"min": 1, "max": 5}
-BEE_PENALITY = 1  # will remove X of the score of the player (if he kills a bee)
+BALLOONS_MOVE_SPEED = {"min": 5, "max": 15}
+BEE_PENALITY = 10  # will remove X of the score of the player (if he kills a bee)
 
 # colors
 COLORS = {

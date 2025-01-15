@@ -12,7 +12,10 @@ class HandTracking:
     def __init__(self, window_size):
         self.window_size = window_size
         self.hand_tracking = mp_hands.Hands(
-            min_detection_confidence=0.5, min_tracking_confidence=0.5
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5,
+            max_num_hands=1,  # Only track one hand to improve performance
+            model_complexity=0  # Use a lighter model (0 is fastest, 1 is balanced, 2 is most accurate)
         )
         self.hand_x = 0
         self.hand_y = 0
@@ -20,34 +23,31 @@ class HandTracking:
         self.hand_closed = False
 
     def scan_hands(self, image):
-        rows, cols, _ = image.shape
-
-        # Flip the image horizontally for a later selfie-view display, and convert
-        # the BGR image to RGB.
+        # Reduce image resolution for processing
+        image = cv2.resize(image, (160, 90))  # Lower resolution for processing
+        
         image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
-        # To improve performance, optionally mark the image as not writeable to
-        # pass by reference.
         image.flags.writeable = False
         self.results = self.hand_tracking.process(image)
-
-        # Draw the hand annotations on the image.
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
         self.hand_closed = False
 
         if self.results.multi_hand_landmarks:
-            for hand_landmarks in self.results.multi_hand_landmarks:
-                x, y = hand_landmarks.landmark[9].x, hand_landmarks.landmark[9].y
+            hand_landmarks = self.results.multi_hand_landmarks[0]  # Only process first hand
+            x, y = hand_landmarks.landmark[9].x, hand_landmarks.landmark[9].y
+            
+            self.hand_x = int(x * self.window_size[0])
+            self.hand_y = int(y * self.window_size[1])
+            
+            x1, y1 = hand_landmarks.landmark[12].x, hand_landmarks.landmark[12].y
+            
+            if y1 > y:
+                self.hand_closed = True
 
-                self.hand_x = int(x * self.window_size[0])
-                self.hand_y = int(y * self.window_size[1])
-
-                x1, y1 = hand_landmarks.landmark[12].x, hand_landmarks.landmark[12].y
-
-                if y1 > y:
-                    self.hand_closed = True
-
+            # Only draw landmarks if FPS is above threshold
+            if DRAW_FPS:
                 mp_drawing.draw_landmarks(
                     image,
                     hand_landmarks,
