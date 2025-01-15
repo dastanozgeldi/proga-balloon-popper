@@ -40,8 +40,8 @@ class HandTracking:
             ]  # Only process first hand
             x, y = hand_landmarks.landmark[9].x, hand_landmarks.landmark[9].y
 
-            self.hand_x = int(x * self.window_size[0])
-            self.hand_y = int(y * self.window_size[1])
+            self.hand_x = int(x * (self.window_size[0] + 400)) - 200
+            self.hand_y = int(y * (self.window_size[1] + 400)) - 200
 
             x1, y1 = hand_landmarks.landmark[12].x, hand_landmarks.landmark[12].y
 
