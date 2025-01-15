@@ -26,8 +26,6 @@ class Game:
 
         # Load camera
         self.cap = cv2.VideoCapture(1)
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 200)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 200)
 
         self.sounds = {}
         self.sounds["slap"] = pygame.mixer.Sound(f"assets/sounds/slap.wav")
@@ -63,7 +61,7 @@ class Game:
 
     def load_camera(self):
         _, frame = self.cap.read()
-        self.frame = cv2.resize(frame, (200, 113))
+        self.frame = cv2.resize(frame, (300, 169))
 
     def set_hand_position(self):
         self.frame = self.hand_tracking.scan_hands(self.frame)
@@ -73,6 +71,16 @@ class Game:
     def draw(self):
         # draw the background
         self.background.draw(self.surface)
+
+        # Convert camera frame to Pygame surface and draw it
+        if hasattr(self, 'frame'):
+            # Convert BGR to RGB
+            frame_rgb = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
+            # Create Pygame surface from camera frame
+            frame_surface = pygame.surfarray.make_surface(frame_rgb.swapaxes(0,1))
+            # Position in top right corner with 10px padding
+            self.surface.blit(frame_surface, (SCREEN_WIDTH - 176 - 10, 10))
+
         # draw the insects
         for insect in self.insects:
             insect.draw(self.surface)
@@ -95,21 +103,12 @@ class Game:
         ui.draw_text(
             self.surface,
             f"Time left : {self.time_left}",
-            (self.window_size[0] - 400, 5),
+            (SCREEN_WIDTH // 2, 5),
             timer_text_color,
             font=FONTS["medium"],
             shadow=True,
             shadow_color=(255, 255, 255),
         )
-
-        # Convert camera frame to Pygame surface and draw it
-        if hasattr(self, 'frame'):
-            # Convert BGR to RGB
-            frame_rgb = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
-            # Create Pygame surface from camera frame
-            frame_surface = pygame.surfarray.make_surface(frame_rgb.swapaxes(0,1))
-            # Position in top right corner with 10px padding
-            self.surface.blit(frame_surface, (self.window_size[0], 0))
 
     def game_time_update(self):
         self.time_left = max(
