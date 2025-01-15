@@ -1,5 +1,6 @@
 import pygame
 
+import image
 from settings import *
 
 
@@ -66,10 +67,8 @@ def button(surface, pos_y, text=None, click_sound=None, pos_x=None):
         return True
 
 
-arrow_left = pygame.image.load("assets/arrow-left.png")
-
-
 def back_button(surface, pos_x, pos_y):
+    arrow_left = image.load("assets/arrow-left.png")
     rect = pygame.Rect((pos_x, pos_y), (50, 50))
 
     on_button = False
