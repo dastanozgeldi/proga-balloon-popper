@@ -24,7 +24,7 @@ main_clock = pygame.time.Clock()
 fps_font = pygame.font.SysFont("coopbl", 22)
 
 
-pygame.mixer.music.load("assets/sounds/music.mp3")
+pygame.mixer.music.load("assets/sounds/funk.mp3")
 pygame.mixer.music.set_volume(MUSIC_VOLUME)
 pygame.mixer.music.play(-1)
 
