@@ -174,12 +174,14 @@ class Menu:
                 self.show_settings = False
                 return "menu"
         else:
+            # Only enable the Start button if there's a username
             if ui.button(
                 self.surface,
                 320,
                 "Start",
-                click_sound=self.click_sound,
+                click_sound=self.click_sound if self.player_name.strip() else None,
                 pos_x=self.window_width,
+                disabled=not self.player_name.strip()
             ):
                 self.game.player_name = self.player_name
                 return "game"

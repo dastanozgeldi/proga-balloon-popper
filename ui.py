@@ -31,38 +31,40 @@ def draw_text(
     surface.blit(label, label_rect)  # draw the text
 
 
-def button(surface, pos_y, text=None, click_sound=None, pos_x=None):
+def button(surface, pos_y, text=None, click_sound=None, pos_x=None, disabled=False):
     rect = pygame.Rect(
         ((pos_x if pos_x else SCREEN_WIDTH) // 2 - BUTTONS_SIZES[0] // 2, pos_y),
         BUTTONS_SIZES,
     )
 
     on_button = False
-    if rect.collidepoint(pygame.mouse.get_pos()):
+    if rect.collidepoint(pygame.mouse.get_pos()) and not disabled:
         color = COLORS["buttons"]["second"]
         on_button = True
     else:
-        color = COLORS["buttons"]["default"]
+        color = (128, 128, 128) if disabled else COLORS["buttons"]["default"]
 
     pygame.draw.rect(
-        surface, COLORS["buttons"]["shadow"], (rect.x - 6, rect.y - 6, rect.w, rect.h)
+        surface, COLORS["buttons"]["shadow"] if not disabled else (100, 100, 100), (rect.x - 6, rect.y - 6, rect.w, rect.h)
     )  # draw the shadow rectangle
     pygame.draw.rect(surface, color, rect)  # draw the rectangle
+
     # draw the text
     if text is not None:
+        text_color = (180, 180, 180) if disabled else COLORS["buttons"]["text"]
         draw_text(
             surface,
             text,
             rect.center,
-            COLORS["buttons"]["text"],
+            text_color,
             font=FONTS["small"],
             pos_mode="center",
             shadow=True,
             shadow_color=COLORS["buttons"]["shadow"],
         )
 
-    if on_button and pygame.mouse.get_pressed()[0]:  # if the user press on the button
-        if click_sound is not None:  # play the sound if needed
+    if on_button and pygame.mouse.get_pressed()[0] and not disabled:
+        if click_sound is not None:
             click_sound.play()
         return True
 
