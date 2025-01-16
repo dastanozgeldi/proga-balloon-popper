@@ -43,11 +43,17 @@ COLORS = {
         "text": (255, 255, 255),
         "shadow": (46, 54, 163),
     },
+    "toggle": {
+        "active": (87, 99, 255),
+        "inactive": (128, 128, 128),
+        "background": (200, 200, 200),
+    },
 }  # second is the color when the mouse is on the button
 
 # sounds / music
 MUSIC_VOLUME = 0.16  # value between 0 and 1
 SOUNDS_VOLUME = 1
+MUSIC_ENABLED = True  # Default to music on
 
 # fonts
 pygame.font.init()
@@ -55,3 +61,6 @@ FONTS = {}
 FONTS["small"] = pygame.font.Font(None, 40)
 FONTS["medium"] = pygame.font.Font(None, 72)
 FONTS["big"] = pygame.font.Font(None, 96)
+
+# Add at the top with other window settings
+FULLSCREEN_MODE = False  # Default to windowed mode

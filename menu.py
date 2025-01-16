@@ -23,6 +23,7 @@ class Menu:
         self.leaderboard_fetched = False
         self.leaderboard_data = []
         self.show_credits = False
+        self.show_settings = False
 
     def reset_input(self):
         self.player_name = ""
@@ -72,6 +73,25 @@ class Menu:
                 ],
                 x=self.window_width // 2,
             )
+        elif self.show_settings:
+            ui.draw_title_text(self.surface, "Settings", x=self.window_width // 2)
+            
+            # Draw music toggle
+            global MUSIC_ENABLED
+            if ui.toggle_button(
+                self.surface,
+                self.window_width // 2 + 50,
+                250,
+                60,
+                30,
+                MUSIC_ENABLED,
+                "Music"
+            ):
+                MUSIC_ENABLED = not MUSIC_ENABLED
+                if MUSIC_ENABLED:
+                    pygame.mixer.music.play(-1)
+                else:
+                    pygame.mixer.music.stop()
         else:
             # Draw main menu
             ui.draw_title_text(
@@ -135,6 +155,10 @@ class Menu:
             if ui.back_button(self.surface, 50, 100):
                 self.show_credits = False
                 return "menu"
+        elif self.show_settings:
+            if ui.back_button(self.surface, 50, 100):
+                self.show_settings = False
+                return "menu"
         else:
             if ui.button(
                 self.surface,
@@ -167,9 +191,25 @@ class Menu:
             if ui.button(
                 self.surface,
                 320 + BUTTONS_SIZES[1] * 3.75,
+                "Settings",
+                click_sound=self.click_sound,
+                pos_x=self.window_width,
+            ):
+                self.show_settings = True
+
+            if ui.button(
+                self.surface,
+                320 + BUTTONS_SIZES[1] * 5,
                 "Quit",
                 click_sound=self.click_sound,
                 pos_x=self.window_width,
             ):
                 pygame.quit()
                 sys.exit()
+
+    def apply_screen_mode(self):
+        global FULLSCREEN_MODE
+        if FULLSCREEN_MODE:
+            pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        else:
+            pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))

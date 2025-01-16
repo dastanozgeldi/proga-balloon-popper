@@ -111,3 +111,32 @@ def draw_small_texts(surface, texts: list[str], *, x: int, starting_y: int = Non
             shadow_color=(255, 255, 255),
             pos_mode="center",
         )
+
+
+def toggle_button(surface, x, y, width, height, is_active, text=None):
+    background_rect = pygame.Rect(x, y, width, height)
+    toggle_radius = height - 4
+    toggle_pos = x + width - toggle_radius - 2 if is_active else x + 2
+    
+    pygame.draw.rect(surface, COLORS["toggle"]["background"], background_rect, border_radius=height//2)
+    
+    toggle_color = COLORS["toggle"]["active"] if is_active else COLORS["toggle"]["inactive"]
+    pygame.draw.circle(surface, toggle_color, (toggle_pos + toggle_radius//2, y + height//2), toggle_radius//2)
+    
+    # Draw label text
+    if text:
+        draw_text(
+            surface,
+            text,
+            (x - 100, y),
+            COLORS["title"],
+            font=FONTS["small"],
+        )
+    
+    # Check for click
+    mouse_pos = pygame.mouse.get_pos()
+    mouse_click = pygame.mouse.get_pressed()[0]
+    
+    if background_rect.collidepoint(mouse_pos) and mouse_click:
+        return True
+    return False
