@@ -33,6 +33,7 @@ game.menu = menu
 
 
 def user_events():
+    global state
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -40,8 +41,9 @@ def user_events():
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                pygame.quit()
-                sys.exit()
+                if state == "game":
+                    state = "menu"
+                    menu.reset_input()
 
         if state == "menu":
             menu.handle_event(event)
