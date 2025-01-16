@@ -58,7 +58,7 @@ MUSIC_ENABLED = True  # Default to music on
 # fonts
 pygame.font.init()
 FONTS = {}
-FONTS["small"] = pygame.font.Font(None, 40)
+FONTS["small"] = pygame.font.Font(None, 48)
 FONTS["medium"] = pygame.font.Font(None, 72)
 FONTS["big"] = pygame.font.Font(None, 96)
 

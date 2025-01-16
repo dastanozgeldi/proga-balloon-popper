@@ -106,7 +106,7 @@ def draw_small_texts(surface, texts: list[str], *, x: int, starting_y: int = Non
         draw_text(
             surface,
             text,
-            (x, y + index * 35),
+            (x, y + index * 40),
             COLORS["title"],
             font=FONTS["small"],
             shadow=True,
@@ -131,7 +131,7 @@ def toggle_button(surface, x, y, width, height, is_active, text=None):
         draw_text(
             surface,
             text,
-            (x - text_x // 2 - 30, y),
+            (x - text_x // 2 - 50, y),
             COLORS["title"],
             font=FONTS["small"],
         )
