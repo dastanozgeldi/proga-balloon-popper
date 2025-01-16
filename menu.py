@@ -77,7 +77,7 @@ class Menu:
             ui.draw_title_text(self.surface, "Settings", x=self.window_width // 2)
             
             # Global declarations at the start
-            global MUSIC_ENABLED, DRAW_FPS
+            global MUSIC_ENABLED, DRAW_FPS, FULLSCREEN_MODE
             
             # Draw music toggle
             if ui.toggle_button(
@@ -99,13 +99,26 @@ class Menu:
             if ui.toggle_button(
                 self.surface,
                 self.window_width // 2 + 50,
-                300,  # Positioned 50px below the music toggle
+                300,
                 60,
                 30,
                 DRAW_FPS,
                 "Display FPS"
             ):
                 DRAW_FPS = not DRAW_FPS
+
+            if ui.toggle_button(
+                self.surface,
+                self.window_width // 2 + 50,
+                350,
+                60,
+                30,
+                FULLSCREEN_MODE,
+                "Fullscreen"
+            ):
+                FULLSCREEN_MODE = not FULLSCREEN_MODE
+                self.apply_screen_mode()
+                self.window_width, self.window_height = pygame.display.get_window_size()
         else:
             # Draw main menu
             ui.draw_title_text(
@@ -225,7 +238,36 @@ class Menu:
 
     def apply_screen_mode(self):
         global FULLSCREEN_MODE
+        current_w, current_h = pygame.display.get_window_size()
+        
         if FULLSCREEN_MODE:
-            pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+            # Store current window size before going fullscreen
+            self.window_size_before_fullscreen = (current_w, current_h)
+            # Get the current display info
+            display_info = pygame.display.Info()
+            # Set fullscreen at native resolution
+            self.surface = pygame.display.set_mode(
+                (display_info.current_w, display_info.current_h),
+                pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
+            )
         else:
-            pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+            # Restore previous window size
+            size = getattr(self, 'window_size_before_fullscreen', (SCREEN_WIDTH, SCREEN_HEIGHT))
+            self.surface = pygame.display.set_mode(
+                size,
+                pygame.HWSURFACE | pygame.DOUBLEBUF
+            )
+        
+        # Update window dimensions
+        self.window_width, self.window_height = pygame.display.get_window_size()
+        
+        # Update game references
+        if hasattr(self, 'game'):
+            self.game.surface = self.surface
+            self.game.window_size = (self.window_width, self.window_height)
+        
+        # Only recreate background if dimensions changed
+        if (current_w, current_h) != (self.window_width, self.window_height):
+            self.background = Background((self.window_width, self.window_height))
+            if hasattr(self, 'game'):
+                self.game.background = Background((self.window_width, self.window_height))
