@@ -68,6 +68,7 @@ class Menu:
                     "Dastan Ozgeldi",
                     "Alikhan Shikhiyev",
                     "Aizhan Abisheva",
+                    "Alikhan Makhan"
                 ],
                 x=self.window_width // 2,
             )
