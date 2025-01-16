@@ -125,10 +125,11 @@ def toggle_button(surface, x, y, width, height, is_active, text=None):
     
     # Draw label text
     if text:
+        text_x, _ = FONTS["medium"].size(text)
         draw_text(
             surface,
             text,
-            (x - 100, y),
+            (x - text_x // 2 - 30, y),
             COLORS["title"],
             font=FONTS["small"],
         )

@@ -76,8 +76,10 @@ class Menu:
         elif self.show_settings:
             ui.draw_title_text(self.surface, "Settings", x=self.window_width // 2)
             
+            # Global declarations at the start
+            global MUSIC_ENABLED, DRAW_FPS
+            
             # Draw music toggle
-            global MUSIC_ENABLED
             if ui.toggle_button(
                 self.surface,
                 self.window_width // 2 + 50,
@@ -92,6 +94,18 @@ class Menu:
                     pygame.mixer.music.play(-1)
                 else:
                     pygame.mixer.music.stop()
+            
+            # Draw FPS toggle
+            if ui.toggle_button(
+                self.surface,
+                self.window_width // 2 + 50,
+                300,  # Positioned 50px below the music toggle
+                60,
+                30,
+                DRAW_FPS,
+                "Display FPS"
+            ):
+                DRAW_FPS = not DRAW_FPS
         else:
             # Draw main menu
             ui.draw_title_text(
