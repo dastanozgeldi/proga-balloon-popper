@@ -12,7 +12,11 @@ from settings import *
 os.environ["SDL_VIDEO_WINDOW_POS"] = "%d,%d" % (100, 32)
 pygame.init()
 pygame.display.set_caption(WINDOW_NAME)
-SCREEN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+
+if FULLSCREEN_MODE:
+    SCREEN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+else:
+    SCREEN = pygame.display.set_mode()
 
 main_clock = pygame.time.Clock()
 
