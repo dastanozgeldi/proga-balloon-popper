@@ -24,7 +24,7 @@ main_clock = pygame.time.Clock()
 fps_font = pygame.font.SysFont("coopbl", 22)
 
 
-pygame.mixer.music.load("assets/sounds/funk.mp3")
+pygame.mixer.music.load("assets/sounds/music.mp3")
 pygame.mixer.music.set_volume(MUSIC_VOLUME)
 pygame.mixer.music.play(-1)
 
@@ -55,6 +55,7 @@ def user_events():
 
 def update():
     global state
+
     if state == "menu":
         if menu.update() == "game":
             game.reset()
@@ -69,12 +70,18 @@ while True:
     user_events()
     update()
 
-    # Clear previous FPS display by drawing background at that spot
     if DRAW_FPS:
+        fps_area = pygame.Rect(5, 70, 100, 30)
+
+        # Clear FPS area only if game background exists
+        if hasattr(game, 'background') and game.background and hasattr(game.background, 'image'):
+            background_subsurface = game.background.image.subsurface(fps_area)
+            SCREEN.blit(background_subsurface, fps_area)
+        
+        # Draw FPS counter
         fps_label = fps_font.render(
             f"FPS: {int(main_clock.get_fps())}", 1, (255, 200, 20)
         )
         SCREEN.blit(fps_label, (5, 70))
 
-    # Update the display after drawing everything
     pygame.display.flip()

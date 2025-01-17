@@ -77,9 +77,8 @@ class Menu:
             ui.draw_title_text(self.surface, "Settings", x=self.window_width // 2)
             
             # Global declarations at the start
-            global MUSIC_ENABLED, DRAW_FPS, FULLSCREEN_MODE
-            
-            # Draw music toggle
+            global MUSIC_ENABLED, FULLSCREEN_MODE
+
             if ui.toggle_button(
                 self.surface,
                 self.window_width // 2 + 50,
@@ -94,23 +93,11 @@ class Menu:
                     pygame.mixer.music.play(-1)
                 else:
                     pygame.mixer.music.stop()
-            
-            # Draw FPS toggle
-            if ui.toggle_button(
-                self.surface,
-                self.window_width // 2 + 50,
-                300,
-                60,
-                30,
-                DRAW_FPS,
-                "Display FPS"
-            ):
-                DRAW_FPS = not DRAW_FPS
 
             if ui.toggle_button(
                 self.surface,
                 self.window_width // 2 + 50,
-                350,
+                300,
                 60,
                 30,
                 FULLSCREEN_MODE,
