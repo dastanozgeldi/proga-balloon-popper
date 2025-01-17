@@ -16,7 +16,7 @@ pygame.display.set_caption(WINDOW_NAME)
 if FULLSCREEN_MODE:
     SCREEN = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 else:
-    SCREEN = pygame.display.set_mode()
+    SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 main_clock = pygame.time.Clock()
 
@@ -46,8 +46,7 @@ def user_events():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 if state == "game":
-                    state = "menu"
-                    menu.reset_input()
+                    game.paused = not game.paused  # Toggle pause state instead of returning to menu
 
         if state == "menu":
             menu.handle_event(event)
@@ -71,14 +70,6 @@ while True:
     update()
 
     if DRAW_FPS:
-        fps_area = pygame.Rect(5, 70, 100, 30)
-
-        # Clear FPS area only if game background exists
-        if hasattr(game, 'background') and game.background and hasattr(game.background, 'image'):
-            background_subsurface = game.background.image.subsurface(fps_area)
-            SCREEN.blit(background_subsurface, fps_area)
-        
-        # Draw FPS counter
         fps_label = fps_font.render(
             f"FPS: {int(main_clock.get_fps())}", 1, (255, 200, 20)
         )

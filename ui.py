@@ -105,12 +105,12 @@ def back_button(surface, pos_x, pos_y):
         return True
 
 
-def draw_title_text(surface, text: str, *, x: int, y: int = None):
+def draw_title_text(surface, text: str, *, color = None, x: int, y: int = None):
     return draw_text(
         surface,
         text,
         (x, y if y else 120),
-        COLORS["title"],
+        color if color else COLORS["title"],
         font=FONTS["big"],
         shadow=True,
         shadow_color=(255, 255, 255),

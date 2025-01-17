@@ -24,13 +24,15 @@ class Game:
         self.player_name = ""
 
         # Load camera
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(1)
 
         self.sounds = {}
         self.sounds["slap"] = pygame.mixer.Sound(f"assets/sounds/slap.wav")
         self.sounds["slap"].set_volume(SOUNDS_VOLUME)
         self.sounds["screaming"] = pygame.mixer.Sound(f"assets/sounds/screaming.wav")
         self.sounds["screaming"].set_volume(SOUNDS_VOLUME)
+
+        self.paused = False
 
     def reset(self):  # reset all the needed variables
         self.hand_tracking = HandTracking(self.window_size)
@@ -108,9 +110,10 @@ class Game:
         )
 
     def game_time_update(self):
-        self.time_left = max(
-            round(GAME_DURATION - (time.time() - self.game_start_time), 1), 0
-        )
+        if not self.paused:  # Only update time if game is not paused
+            self.time_left = max(
+                round(GAME_DURATION - (time.time() - self.game_start_time), 1), 0
+            )
 
     def update_scores(self, score):
         new_score = {
@@ -131,19 +134,70 @@ class Game:
         except Exception as e:
             print(f"Failed to send score to API: {e}")
 
+    def create_blur_surface(self, surface):
+        # Create a copy of the surface at 1/4 size
+        small = pygame.transform.scale(surface, (self.window_size[0] // 4, self.window_size[1] // 4))
+        # Scale back up - this creates the blur effect
+        blurred = pygame.transform.scale(small, self.window_size)
+        # Add semi-transparent overlay to darken
+        overlay = pygame.Surface(self.window_size, pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 128))  # black with 50% transparency
+        blurred.blit(overlay, (0, 0))
+        return blurred
+
     def update(self):
         self.load_camera()
         self.set_hand_position()
         self.game_time_update()
 
+        # Draw the game normally first
         self.draw()
+
+        if self.paused:
+            # Create blurred background from current display
+            blurred = self.create_blur_surface(self.surface.copy())
+            # Draw the blurred background
+            self.surface.blit(blurred, (0, 0))
+            
+            # Draw pause menu
+            ui.draw_title_text(self.surface, "PAUSED", color='white', x=self.window_size[0] // 2, y=300)
+            ui.draw_text(
+                self.surface,
+                f"Current Score: {self.score}",
+                (self.window_size[0] // 2, 360),
+                'white',
+                pos_mode="center",
+                shadow=True,
+                shadow_color=(255, 255, 255),
+            )
+
+            if ui.button(
+                self.surface,
+                400,
+                "Continue",
+                click_sound=self.sounds["slap"],
+                pos_x=self.window_size[0],
+            ):
+                self.paused = False
+                return None
+
+            if ui.button(
+                self.surface,
+                400 + BUTTONS_SIZES[1] * 1.25,
+                "Main Menu",
+                click_sound=self.sounds["slap"],
+                pos_x=self.window_size[0],
+            ):
+                self.menu.reset_input()
+                return "menu"
+
+            return None
 
         if self.time_left > 0:
             self.spawn_insects()
             (x, y) = self.hand_tracking.get_hand_center()
             self.hand.rect.center = (x, y)
             self.hand.left_click = self.hand_tracking.hand_closed
-            # print("Hand closed", self.hand.left_click)
             if self.hand.left_click:
                 self.hand.image = self.hand.image_smaller.copy()
             else:
@@ -151,8 +205,7 @@ class Game:
             self.score = self.hand.kill_insects(self.insects, self.score, self.sounds)
             for insect in self.insects:
                 insect.move()
-
-        else:  # when the game is over
+        else:
             if not self.score_saved:
                 self.update_scores(self.score)
                 self.score_saved = True
