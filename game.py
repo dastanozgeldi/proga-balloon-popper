@@ -103,11 +103,37 @@ class Game:
         ui.draw_text(
             self.surface,
             f"Time left : {self.time_left}",
-            (SCREEN_WIDTH // 2, 5),
+            (self.window_size[0] // 2, 5),
             timer_text_color,
             shadow=True,
             shadow_color=(255, 255, 255),
         )
+
+        # Draw game over screen if time is up
+        if self.time_left <= 0:
+            # Create blurred background
+            blurred = self.create_blur_surface(self.surface.copy())
+            self.surface.blit(blurred, (0, 0))
+            
+            # Draw Game Over title
+            ui.draw_title_text(
+                self.surface,
+                "GAME OVER",
+                color='white',
+                x=self.window_size[0] // 2,
+                y=250
+            )
+            
+            # Draw final score
+            ui.draw_text(
+                self.surface,
+                f"Final Score: {self.score}",
+                (self.window_size[0] // 2, 350),
+                'white',
+                pos_mode="center",
+                shadow=True,
+                shadow_color=(255, 255, 255),
+            )
 
     def game_time_update(self):
         if not self.paused:  # Only update time if game is not paused
@@ -210,10 +236,21 @@ class Game:
                 self.update_scores(self.score)
                 self.score_saved = True
 
+            # Add Play Again button
             if ui.button(
                 self.surface,
-                self.window_size[1] - 100,
-                "Continue",
+                450,
+                "Play Again",
+                click_sound=self.sounds["slap"],
+                pos_x=self.window_size[0],
+            ):
+                self.reset()
+                return None
+
+            if ui.button(
+                self.surface,
+                550,
+                "Main Menu",
                 click_sound=self.sounds["slap"],
                 pos_x=self.window_size[0],
             ):
