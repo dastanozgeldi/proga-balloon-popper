@@ -1,3 +1,4 @@
+import datetime
 import random
 import time
 
@@ -41,6 +42,7 @@ class Game:
         self.insects_spawn_timer = 0
         self.score = 0
         self.game_start_time = time.time()
+        self.score_saved = False
 
     def spawn_insects(self):
         t = time.time()
@@ -111,6 +113,9 @@ class Game:
 
         # Draw game over screen if time is up
         if self.time_left <= 0:
+            if not self.score_saved:
+                self.update_scores(self.score)
+                self.score_saved = True
             # Create blurred background
             blurred = self.create_blur_surface(self.surface.copy())
             self.surface.blit(blurred, (0, 0))
@@ -143,7 +148,7 @@ class Game:
 
     def update_scores(self, score):
         new_score = {
-            "player_name": self.player_name if self.player_name else "Anonymous",
+            "player_name": self.player_name,
             "score": score,
         }
 
@@ -156,7 +161,7 @@ class Game:
             )
             response.raise_for_status()
 
-            print("Sent to API successfully")
+            print(f"[{datetime.datetime.now()}] {self.player_name} - {self.score}. Sent to API successfully")
         except Exception as e:
             print(f"Failed to send score to API: {e}")
 
@@ -236,10 +241,6 @@ class Game:
             for insect in self.insects:
                 insect.move()
         else:
-            if not self.score_saved:
-                self.update_scores(self.score)
-                self.score_saved = True
-
             # Add Play Again button
             if ui.button(
                 self.surface,
