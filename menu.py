@@ -69,13 +69,13 @@ class Menu:
                     "Dastan Ozgeldi",
                     "Alikhan Shikhiyev",
                     "Aizhan Abisheva",
-                    "Alikhan Makhan"
+                    "Alikhan Makhan",
                 ],
                 x=self.window_width // 2,
             )
         elif self.show_settings:
             ui.draw_title_text(self.surface, "Settings", x=self.window_width // 2)
-            
+
             # Global declarations at the start
             global MUSIC_ENABLED, FULLSCREEN_MODE
 
@@ -86,7 +86,7 @@ class Menu:
                 60,
                 30,
                 MUSIC_ENABLED,
-                "Music"
+                "Music",
             ):
                 MUSIC_ENABLED = not MUSIC_ENABLED
                 if MUSIC_ENABLED:
@@ -101,7 +101,7 @@ class Menu:
                 60,
                 30,
                 FULLSCREEN_MODE,
-                "Fullscreen"
+                "Fullscreen",
             ):
                 FULLSCREEN_MODE = not FULLSCREEN_MODE
                 self.apply_screen_mode()
@@ -181,7 +181,7 @@ class Menu:
                 "Start",
                 click_sound=self.click_sound if self.player_name.strip() else None,
                 pos_x=self.window_width,
-                disabled=not self.player_name.strip()
+                disabled=not self.player_name.strip(),
             ):
                 self.game.player_name = self.player_name
                 return "game"
@@ -226,7 +226,7 @@ class Menu:
     def apply_screen_mode(self):
         global FULLSCREEN_MODE
         current_w, current_h = pygame.display.get_window_size()
-        
+
         if FULLSCREEN_MODE:
             # Store current window size before going fullscreen
             self.window_size_before_fullscreen = (current_w, current_h)
@@ -235,26 +235,29 @@ class Menu:
             # Set fullscreen at native resolution
             self.surface = pygame.display.set_mode(
                 (display_info.current_w, display_info.current_h),
-                pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF
+                pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF,
             )
         else:
             # Restore previous window size
-            size = getattr(self, 'window_size_before_fullscreen', (SCREEN_WIDTH, SCREEN_HEIGHT))
-            self.surface = pygame.display.set_mode(
-                size,
-                pygame.HWSURFACE | pygame.DOUBLEBUF
+            size = getattr(
+                self, "window_size_before_fullscreen", (SCREEN_WIDTH, SCREEN_HEIGHT)
             )
-        
+            self.surface = pygame.display.set_mode(
+                size, pygame.HWSURFACE | pygame.DOUBLEBUF
+            )
+
         # Update window dimensions
         self.window_width, self.window_height = pygame.display.get_window_size()
-        
+
         # Update game references
-        if hasattr(self, 'game'):
+        if hasattr(self, "game"):
             self.game.surface = self.surface
             self.game.window_size = (self.window_width, self.window_height)
-        
+
         # Only recreate background if dimensions changed
         if (current_w, current_h) != (self.window_width, self.window_height):
             self.background = Background((self.window_width, self.window_height))
-            if hasattr(self, 'game'):
-                self.game.background = Background((self.window_width, self.window_height))
+            if hasattr(self, "game"):
+                self.game.background = Background(
+                    (self.window_width, self.window_height)
+                )

@@ -114,22 +114,22 @@ class Game:
             # Create blurred background
             blurred = self.create_blur_surface(self.surface.copy())
             self.surface.blit(blurred, (0, 0))
-            
+
             # Draw Game Over title
             ui.draw_title_text(
                 self.surface,
                 "GAME OVER",
-                color='white',
+                color="white",
                 x=self.window_size[0] // 2,
-                y=250
+                y=250,
             )
-            
+
             # Draw final score
             ui.draw_text(
                 self.surface,
                 f"Final Score: {self.score}",
                 (self.window_size[0] // 2, 350),
-                'white',
+                "white",
                 pos_mode="center",
                 shadow=True,
                 shadow_color=(255, 255, 255),
@@ -162,7 +162,9 @@ class Game:
 
     def create_blur_surface(self, surface):
         # Create a copy of the surface at 1/4 size
-        small = pygame.transform.scale(surface, (self.window_size[0] // 4, self.window_size[1] // 4))
+        small = pygame.transform.scale(
+            surface, (self.window_size[0] // 4, self.window_size[1] // 4)
+        )
         # Scale back up - this creates the blur effect
         blurred = pygame.transform.scale(small, self.window_size)
         # Add semi-transparent overlay to darken
@@ -184,14 +186,16 @@ class Game:
             blurred = self.create_blur_surface(self.surface.copy())
             # Draw the blurred background
             self.surface.blit(blurred, (0, 0))
-            
+
             # Draw pause menu
-            ui.draw_title_text(self.surface, "PAUSED", color='white', x=self.window_size[0] // 2, y=300)
+            ui.draw_title_text(
+                self.surface, "PAUSED", color="white", x=self.window_size[0] // 2, y=300
+            )
             ui.draw_text(
                 self.surface,
                 f"Current Score: {self.score}",
                 (self.window_size[0] // 2, 360),
-                'white',
+                "white",
                 pos_mode="center",
                 shadow=True,
                 shadow_color=(255, 255, 255),

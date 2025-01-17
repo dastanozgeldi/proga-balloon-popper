@@ -46,7 +46,9 @@ def user_events():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 if state == "game":
-                    game.paused = not game.paused  # Toggle pause state instead of returning to menu
+                    game.paused = (
+                        not game.paused
+                    )  # Toggle pause state instead of returning to menu
 
         if state == "menu":
             menu.handle_event(event)
