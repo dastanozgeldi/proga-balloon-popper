@@ -167,7 +167,7 @@ def toggle_button(surface, x, y, width, height, is_active, text=None):
         draw_text(
             surface,
             text,
-            (x - text_x, y),
+            (x - text_x - 30, y),
             COLORS["title"],
             font=FONTS["small"],
         )
